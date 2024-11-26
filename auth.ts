@@ -7,8 +7,16 @@ import { signInSchema } from "./lib/zod"
 // Your own logic for dealing with plaintext password strings; be careful!
 import { saltAndHashPassword } from "@/utils/password"
 import { getUserFromDb } from "@/utils/db"
+import { prisma } from "@/prisma"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { SupabaseAdapter } from "@auth/supabase-adapter"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  // adapter: PrismaAdapter(prisma),
+  adapter: SupabaseAdapter({
+    url: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    secret: process.env.NEXT_SUPABASE_SERVICE_ROLE_KEY,
+  }),
   providers: [
     Google,GitHub,
     Credentials({
